@@ -539,21 +539,6 @@ Data awal dibuat melalui script SQL `database/donor_darah.sql`.
 
 ---
 
-# Cara Menjalankan Program
-
-1. Instal Java Development Kit (JDK).
-2. Instal Apache NetBeans dan MySQL.
-3. Jalankan server MySQL.
-4. Jalankan script `database/donor_darah.sql` untuk menyiapkan database dan data awal.
-5. Pastikan database bernama `minpro4_donor_darah`.
-6. Periksa username dan password pada `DatabaseConnection.java` dan `HibernateUtil.java`.
-7. Buka project `MINPRO_4_PBO` melalui NetBeans.
-8. Tunggu Maven menyelesaikan pengunduhan dependency.
-9. Jalankan **Clean and Build**.
-10. Jalankan class utama program melalui NetBeans.
-
----
-
 # Kesimpulan
 
 Mini Project 4 merupakan pengembangan dari Mini Project 3 dengan menambahkan integrasi database MySQL melalui JDBC dan DAO serta penerapan framework ORM menggunakan Hibernate.
