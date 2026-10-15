@@ -1,9 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package controller;
 
+import dao.DonorDAO;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Donor;
 import model.Pendonor;
@@ -11,56 +10,57 @@ import model.Petugas;
 
 public class DonorController {
 
-    private final ArrayList<Donor> daftarDonor;
+    private final DonorDAO donorDAO;
 
     public DonorController(
             PendonorController pendonorController,
             PetugasController petugasController) {
 
-        daftarDonor = new ArrayList<>();
-
-        // Mengambil dummy data Pendonor dan Petugas
-        Pendonor pendonor = pendonorController.cariPendonor("P001");
-        Petugas petugas = petugasController.cariPetugas("PT001");
-
-        // Dummy data awal Donor
-        daftarDonor.add(
-                new Donor(
-                        "D001",
-                        pendonor,
-                        petugas,
-                        "24-09-2026",
-                        350
-                )
-        );
+        donorDAO = new DonorDAO();
     }
 
     public ArrayList<Donor> getDaftarDonor() {
-        return daftarDonor;
+        try {
+            return new ArrayList<>(donorDAO.getAll());
+        } catch (SQLException e) {
+            System.out.println("Gagal mengambil data donor: "
+                    + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public void tambahDonor(Donor donor) {
-        daftarDonor.add(donor);
+        try {
+            if (!donorDAO.insert(donor)) {
+                System.out.println("Donor gagal ditambahkan.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Gagal menambahkan donor: "
+                    + e.getMessage());
+        }
     }
 
     // Overloading 1: mencari donor berdasarkan ID
     public Donor cariDonor(String idDonor) {
-        for (Donor donor : daftarDonor) {
-            if (donor.getIdDonor().equalsIgnoreCase(idDonor)) {
-                return donor;
-            }
+        try {
+            return donorDAO.getById(idDonor);
+        } catch (SQLException e) {
+            System.out.println("Gagal mencari donor: "
+                    + e.getMessage());
+            return null;
         }
-
-        return null;
     }
 
     // Overloading 2: mencari donor berdasarkan ID dan tanggal
-    public Donor cariDonor(String idDonor, String tanggalDonor) {
-        for (Donor donor : daftarDonor) {
-            if (donor.getIdDonor().equalsIgnoreCase(idDonor)
-                    && donor.getTanggalDonor().equalsIgnoreCase(tanggalDonor)) {
-                return donor;
-            }
+    public Donor cariDonor(
+            String idDonor,
+            String tanggalDonor) {
+
+        Donor donor = cariDonor(idDonor);
+
+        if (donor != null
+                && donor.getTanggalDonor().equals(tanggalDonor)) {
+            return donor;
         }
 
         return null;
@@ -88,23 +88,29 @@ public class DonorController {
         donor.setTanggalDonor(tanggalDonor);
         donor.setJumlahDarah(jumlahDarah);
 
-        return true;
+        try {
+            return donorDAO.update(donor);
+        } catch (SQLException e) {
+            System.out.println("Gagal memperbarui donor: "
+                    + e.getMessage());
+            return false;
+        }
     }
 
     public boolean hapusDonor(String idDonor) {
-        Donor donor = cariDonor(idDonor);
-
-        if (donor == null) {
+        try {
+            return donorDAO.delete(idDonor);
+        } catch (SQLException e) {
+            System.out.println("Gagal menghapus donor: "
+                    + e.getMessage());
             return false;
         }
-
-        daftarDonor.remove(donor);
-        return true;
     }
 
     public boolean pendonorMemilikiDataDonor(String idPendonor) {
-        for (Donor donor : daftarDonor) {
-            if (donor.getPendonor().getId().equalsIgnoreCase(idPendonor)) {
+        for (Donor donor : getDaftarDonor()) {
+            if (donor.getPendonor().getId()
+                    .equalsIgnoreCase(idPendonor)) {
                 return true;
             }
         }
@@ -113,8 +119,9 @@ public class DonorController {
     }
 
     public boolean petugasMemilikiDataDonor(String idPetugas) {
-        for (Donor donor : daftarDonor) {
-            if (donor.getPetugas().getId().equalsIgnoreCase(idPetugas)) {
+        for (Donor donor : getDaftarDonor()) {
+            if (donor.getPetugas().getId()
+                    .equalsIgnoreCase(idPetugas)) {
                 return true;
             }
         }
@@ -125,8 +132,9 @@ public class DonorController {
     public int hitungJumlahDonorPendonor(String idPendonor) {
         int jumlah = 0;
 
-        for (Donor donor : daftarDonor) {
-            if (donor.getPendonor().getId().equalsIgnoreCase(idPendonor)) {
+        for (Donor donor : getDaftarDonor()) {
+            if (donor.getPendonor().getId()
+                    .equalsIgnoreCase(idPendonor)) {
                 jumlah++;
             }
         }

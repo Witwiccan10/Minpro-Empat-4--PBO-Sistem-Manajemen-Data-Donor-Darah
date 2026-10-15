@@ -1,46 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package controller;
 
-import java.util.ArrayList;
+import dao.PendonorDAO;
 import model.Pendonor;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PendonorController {
 
-    private final ArrayList<Pendonor> daftarPendonor;
+    private final PendonorDAO pendonorDAO;
 
     public PendonorController() {
-        daftarPendonor = new ArrayList<>();
-
-        // Dummy data awal
-        daftarPendonor.add(
-                new Pendonor(
-                        "P001",
-                        "Budi Santoso",
-                        "081234567890",
-                        "O"
-                )
-        );
+        pendonorDAO = new PendonorDAO();
     }
 
     public ArrayList<Pendonor> getDaftarPendonor() {
-        return daftarPendonor;
+        try {
+            return new ArrayList<>(pendonorDAO.getAll());
+        } catch (SQLException e) {
+            System.out.println("Gagal mengambil data pendonor: "
+                    + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public void tambahPendonor(Pendonor pendonor) {
-        daftarPendonor.add(pendonor);
+        try {
+            if (!pendonorDAO.insert(pendonor)) {
+                System.out.println("Pendonor gagal ditambahkan.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Gagal menambahkan pendonor: "
+                    + e.getMessage());
+        }
     }
 
     public Pendonor cariPendonor(String id) {
-        for (Pendonor pendonor : daftarPendonor) {
-            if (pendonor.getId().equalsIgnoreCase(id)) {
-                return pendonor;
-            }
+        try {
+            return pendonorDAO.getById(id);
+        } catch (SQLException e) {
+            System.out.println("Gagal mencari pendonor: "
+                    + e.getMessage());
+            return null;
         }
-
-        return null;
     }
 
     public boolean idSudahAda(String id) {
@@ -63,17 +65,22 @@ public class PendonorController {
         pendonor.setNoHp(noHp);
         pendonor.setGolonganDarah(golonganDarah);
 
-        return true;
+        try {
+            return pendonorDAO.update(pendonor);
+        } catch (SQLException e) {
+            System.out.println("Gagal memperbarui pendonor: "
+                    + e.getMessage());
+            return false;
+        }
     }
 
     public boolean hapusPendonor(String id) {
-        Pendonor pendonor = cariPendonor(id);
-
-        if (pendonor == null) {
+        try {
+            return pendonorDAO.delete(id);
+        } catch (SQLException e) {
+            System.out.println("Gagal menghapus pendonor: "
+                    + e.getMessage());
             return false;
         }
-
-        daftarPendonor.remove(pendonor);
-        return true;
     }
 }

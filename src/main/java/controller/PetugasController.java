@@ -1,46 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package controller;
 
-import java.util.ArrayList;
+import dao.PetugasDAO;
 import model.Petugas;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PetugasController {
 
-    private final ArrayList<Petugas> daftarPetugas;
+    private final PetugasDAO petugasDAO;
 
     public PetugasController() {
-        daftarPetugas = new ArrayList<>();
-
-        // Dummy data awal
-        daftarPetugas.add(
-                new Petugas(
-                        "PT001",
-                        "Siti Rahma",
-                        "081298765432",
-                        "Petugas Donor"
-                )
-        );
+        petugasDAO = new PetugasDAO();
     }
 
     public ArrayList<Petugas> getDaftarPetugas() {
-        return daftarPetugas;
+        try {
+            return new ArrayList<>(petugasDAO.getAll());
+        } catch (SQLException e) {
+            System.out.println("Gagal mengambil data petugas: "
+                    + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public void tambahPetugas(Petugas petugas) {
-        daftarPetugas.add(petugas);
+        try {
+            if (!petugasDAO.insert(petugas)) {
+                System.out.println("Petugas gagal ditambahkan.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Gagal menambahkan petugas: "
+                    + e.getMessage());
+        }
     }
 
     public Petugas cariPetugas(String id) {
-        for (Petugas petugas : daftarPetugas) {
-            if (petugas.getId().equalsIgnoreCase(id)) {
-                return petugas;
-            }
+        try {
+            return petugasDAO.getById(id);
+        } catch (SQLException e) {
+            System.out.println("Gagal mencari petugas: "
+                    + e.getMessage());
+            return null;
         }
-
-        return null;
     }
 
     public boolean idSudahAda(String id) {
@@ -63,17 +65,22 @@ public class PetugasController {
         petugas.setNoHp(noHp);
         petugas.setJabatan(jabatan);
 
-        return true;
+        try {
+            return petugasDAO.update(petugas);
+        } catch (SQLException e) {
+            System.out.println("Gagal memperbarui petugas: "
+                    + e.getMessage());
+            return false;
+        }
     }
 
     public boolean hapusPetugas(String id) {
-        Petugas petugas = cariPetugas(id);
-
-        if (petugas == null) {
+        try {
+            return petugasDAO.delete(id);
+        } catch (SQLException e) {
+            System.out.println("Gagal menghapus petugas: "
+                    + e.getMessage());
             return false;
         }
-
-        daftarPetugas.remove(petugas);
-        return true;
     }
 }

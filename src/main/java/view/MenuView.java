@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package view;
 
 import controller.DonorController;
@@ -22,16 +19,12 @@ public class MenuView {
 
     public MenuView() {
         input = new Scanner(System.in);
-
         pendonorController = new PendonorController();
         petugasController = new PetugasController();
         donorController = new DonorController(
-                pendonorController,
-                petugasController
+                pendonorController, petugasController
         );
     }
-
-    // ==================== MENU UTAMA ====================
 
     public void tampilkanMenuUtama() {
         int pilihan;
@@ -50,30 +43,17 @@ public class MenuView {
             pilihan = inputAngka("Pilih menu: ");
 
             switch (pilihan) {
-                case 1:
-                    menuPendonor();
-                    break;
-
-                case 2:
-                    menuPetugas();
-                    break;
-
-                case 3:
-                    menuDonor();
-                    break;
-
-                case 4:
-                    tampilkanDataOrang();
-                    break;
-
-                case 0:
-                    System.out.println("\nProgram selesai. Terima kasih!");
-                    break;
-
-                default:
-                    System.out.println("\nPilihan menu tidak tersedia!");
+                case 1 -> menuPendonor();
+                case 2 -> menuPetugas();
+                case 3 -> menuDonor();
+                case 4 -> tampilkanDataOrang();
+                case 0 -> System.out.println(
+                        "\nProgram selesai. Terima kasih!"
+                );
+                default -> System.out.println(
+                        "\nPilihan menu tidak tersedia!"
+                );
             }
-
         } while (pilihan != 0);
     }
 
@@ -83,42 +63,25 @@ public class MenuView {
         int pilihan;
 
         do {
-            System.out.println("\n==========================================");
-            System.out.println("             KELOLA PENDONOR");
-            System.out.println("==========================================");
+            System.out.println("\n========== KELOLA PENDONOR ==========");
             System.out.println("1. Tambah Pendonor");
             System.out.println("2. Lihat Pendonor");
             System.out.println("3. Update Pendonor");
             System.out.println("4. Hapus Pendonor");
             System.out.println("0. Kembali");
-            System.out.println("==========================================");
 
             pilihan = inputAngka("Pilih menu: ");
 
             switch (pilihan) {
-                case 1:
-                    tambahPendonor();
-                    break;
-
-                case 2:
-                    tampilkanPendonor();
-                    break;
-
-                case 3:
-                    updatePendonor();
-                    break;
-
-                case 4:
-                    hapusPendonor();
-                    break;
-
-                case 0:
-                    break;
-
-                default:
-                    System.out.println("\nPilihan menu tidak tersedia!");
+                case 1 -> tambahPendonor();
+                case 2 -> tampilkanPendonor();
+                case 3 -> updatePendonor();
+                case 4 -> hapusPendonor();
+                case 0 -> { }
+                default -> System.out.println(
+                        "Pilihan menu tidak tersedia!"
+                );
             }
-
         } while (pilihan != 0);
     }
 
@@ -141,39 +104,40 @@ public class MenuView {
         String noHp = inputNoHp("No. HP: ");
         String golonganDarah = inputGolonganDarah();
 
-        Pendonor pendonor = new Pendonor(
-                id,
-                nama,
-                noHp,
-                golonganDarah
+        pendonorController.tambahPendonor(
+                new Pendonor(id, nama, noHp, golonganDarah)
         );
 
-        pendonorController.tambahPendonor(pendonor);
+        Pendonor tersimpan = pendonorController.cariPendonor(id);
 
-        System.out.println("\nPendonor berhasil ditambahkan.");
+        if (tersimpan != null) {
+            System.out.println("Pendonor berhasil ditambahkan.");
+        } else {
+            System.out.println(
+                    "Pendonor belum dapat dipastikan tersimpan."
+            );
+        }
     }
 
     private void tampilkanPendonor() {
         System.out.println("\n=============== DATA PENDONOR ===============");
 
-        if (pendonorController.getDaftarPendonor().isEmpty()) {
+        var daftar = pendonorController.getDaftarPendonor();
+
+        if (daftar.isEmpty()) {
             System.out.println("Belum ada data pendonor.");
             return;
         }
 
-        for (Pendonor pendonor
-                : pendonorController.getDaftarPendonor()) {
-
+        for (Pendonor pendonor : daftar) {
             System.out.println("---------------------------------------------");
             System.out.println(pendonor.getInfo());
-
-            int jumlahDonor
-                    = donorController.hitungJumlahDonorPendonor(
+            System.out.println(
+                    "Jumlah Donor   : "
+                    + donorController.hitungJumlahDonorPendonor(
                             pendonor.getId()
-                    );
-
-            System.out.println("Jumlah Donor   : "
-                    + jumlahDonor + " kali");
+                    ) + " kali"
+            );
         }
 
         System.out.println("---------------------------------------------");
@@ -182,10 +146,7 @@ public class MenuView {
     private void updatePendonor() {
         System.out.println("\n========== UPDATE PENDONOR ==========");
 
-        String id = inputTidakKosong(
-                "Masukkan ID Pendonor yang akan diupdate: "
-        );
-
+        String id = inputTidakKosong("ID Pendonor yang akan diupdate: ");
         Pendonor pendonor = pendonorController.cariPendonor(id);
 
         if (pendonor == null) {
@@ -193,37 +154,27 @@ public class MenuView {
             return;
         }
 
-        System.out.println("\nData saat ini:");
+        System.out.println("Data saat ini:");
         System.out.println(pendonor.getInfo());
 
-        System.out.println("\nMasukkan data baru:");
-
-        String nama = inputTidakKosong("Nama: ");
-        String noHp = inputNoHp("No. HP: ");
+        String nama = inputTidakKosong("Nama baru: ");
+        String noHp = inputNoHp("No. HP baru: ");
         String golonganDarah = inputGolonganDarah();
 
-        boolean berhasil = pendonorController.updatePendonor(
-                id,
-                nama,
-                noHp,
-                golonganDarah
-        );
-
-        if (berhasil) {
-            System.out.println("\nData pendonor berhasil diupdate.");
+        if (pendonorController.updatePendonor(
+                id, nama, noHp, golonganDarah)) {
+            System.out.println("Data pendonor berhasil diupdate.");
+        } else {
+            System.out.println("Data pendonor gagal diupdate.");
         }
     }
 
     private void hapusPendonor() {
         System.out.println("\n========== HAPUS PENDONOR ==========");
 
-        String id = inputTidakKosong(
-                "Masukkan ID Pendonor yang akan dihapus: "
-        );
+        String id = inputTidakKosong("ID Pendonor yang akan dihapus: ");
 
-        Pendonor pendonor = pendonorController.cariPendonor(id);
-
-        if (pendonor == null) {
+        if (pendonorController.cariPendonor(id) == null) {
             System.out.println("Pendonor tidak ditemukan!");
             return;
         }
@@ -236,10 +187,10 @@ public class MenuView {
             return;
         }
 
-        boolean berhasil = pendonorController.hapusPendonor(id);
-
-        if (berhasil) {
+        if (pendonorController.hapusPendonor(id)) {
             System.out.println("Pendonor berhasil dihapus.");
+        } else {
+            System.out.println("Pendonor gagal dihapus.");
         }
     }
 
@@ -249,42 +200,25 @@ public class MenuView {
         int pilihan;
 
         do {
-            System.out.println("\n==========================================");
-            System.out.println("              KELOLA PETUGAS");
-            System.out.println("==========================================");
+            System.out.println("\n========== KELOLA PETUGAS ==========");
             System.out.println("1. Tambah Petugas");
             System.out.println("2. Lihat Petugas");
             System.out.println("3. Update Petugas");
             System.out.println("4. Hapus Petugas");
             System.out.println("0. Kembali");
-            System.out.println("==========================================");
 
             pilihan = inputAngka("Pilih menu: ");
 
             switch (pilihan) {
-                case 1:
-                    tambahPetugas();
-                    break;
-
-                case 2:
-                    tampilkanPetugas();
-                    break;
-
-                case 3:
-                    updatePetugas();
-                    break;
-
-                case 4:
-                    hapusPetugas();
-                    break;
-
-                case 0:
-                    break;
-
-                default:
-                    System.out.println("\nPilihan menu tidak tersedia!");
+                case 1 -> tambahPetugas();
+                case 2 -> tampilkanPetugas();
+                case 3 -> updatePetugas();
+                case 4 -> hapusPetugas();
+                case 0 -> { }
+                default -> System.out.println(
+                        "Pilihan menu tidak tersedia!"
+                );
             }
-
         } while (pilihan != 0);
     }
 
@@ -307,29 +241,30 @@ public class MenuView {
         String noHp = inputNoHp("No. HP: ");
         String jabatan = inputTidakKosong("Jabatan: ");
 
-        Petugas petugas = new Petugas(
-                id,
-                nama,
-                noHp,
-                jabatan
+        petugasController.tambahPetugas(
+                new Petugas(id, nama, noHp, jabatan)
         );
 
-        petugasController.tambahPetugas(petugas);
-
-        System.out.println("\nPetugas berhasil ditambahkan.");
+        if (petugasController.cariPetugas(id) != null) {
+            System.out.println("Petugas berhasil ditambahkan.");
+        } else {
+            System.out.println(
+                    "Petugas belum dapat dipastikan tersimpan."
+            );
+        }
     }
 
     private void tampilkanPetugas() {
         System.out.println("\n=============== DATA PETUGAS ===============");
 
-        if (petugasController.getDaftarPetugas().isEmpty()) {
+        var daftar = petugasController.getDaftarPetugas();
+
+        if (daftar.isEmpty()) {
             System.out.println("Belum ada data petugas.");
             return;
         }
 
-        for (Petugas petugas
-                : petugasController.getDaftarPetugas()) {
-
+        for (Petugas petugas : daftar) {
             System.out.println("--------------------------------------------");
             System.out.println(petugas.getInfo());
         }
@@ -340,10 +275,7 @@ public class MenuView {
     private void updatePetugas() {
         System.out.println("\n========== UPDATE PETUGAS ==========");
 
-        String id = inputTidakKosong(
-                "Masukkan ID Petugas yang akan diupdate: "
-        );
-
+        String id = inputTidakKosong("ID Petugas yang akan diupdate: ");
         Petugas petugas = petugasController.cariPetugas(id);
 
         if (petugas == null) {
@@ -351,37 +283,27 @@ public class MenuView {
             return;
         }
 
-        System.out.println("\nData saat ini:");
+        System.out.println("Data saat ini:");
         System.out.println(petugas.getInfo());
 
-        System.out.println("\nMasukkan data baru:");
+        String nama = inputTidakKosong("Nama baru: ");
+        String noHp = inputNoHp("No. HP baru: ");
+        String jabatan = inputTidakKosong("Jabatan baru: ");
 
-        String nama = inputTidakKosong("Nama: ");
-        String noHp = inputNoHp("No. HP: ");
-        String jabatan = inputTidakKosong("Jabatan: ");
-
-        boolean berhasil = petugasController.updatePetugas(
-                id,
-                nama,
-                noHp,
-                jabatan
-        );
-
-        if (berhasil) {
-            System.out.println("\nData petugas berhasil diupdate.");
+        if (petugasController.updatePetugas(
+                id, nama, noHp, jabatan)) {
+            System.out.println("Data petugas berhasil diupdate.");
+        } else {
+            System.out.println("Data petugas gagal diupdate.");
         }
     }
 
     private void hapusPetugas() {
         System.out.println("\n========== HAPUS PETUGAS ==========");
 
-        String id = inputTidakKosong(
-                "Masukkan ID Petugas yang akan dihapus: "
-        );
+        String id = inputTidakKosong("ID Petugas yang akan dihapus: ");
 
-        Petugas petugas = petugasController.cariPetugas(id);
-
-        if (petugas == null) {
+        if (petugasController.cariPetugas(id) == null) {
             System.out.println("Petugas tidak ditemukan!");
             return;
         }
@@ -394,10 +316,10 @@ public class MenuView {
             return;
         }
 
-        boolean berhasil = petugasController.hapusPetugas(id);
-
-        if (berhasil) {
+        if (petugasController.hapusPetugas(id)) {
             System.out.println("Petugas berhasil dihapus.");
+        } else {
+            System.out.println("Petugas gagal dihapus.");
         }
     }
 
@@ -407,42 +329,25 @@ public class MenuView {
         int pilihan;
 
         do {
-            System.out.println("\n==========================================");
-            System.out.println("               KELOLA DONOR");
-            System.out.println("==========================================");
+            System.out.println("\n========== KELOLA DONOR ==========");
             System.out.println("1. Tambah Data Donor");
             System.out.println("2. Lihat Data Donor");
             System.out.println("3. Update Data Donor");
             System.out.println("4. Hapus Data Donor");
             System.out.println("0. Kembali");
-            System.out.println("==========================================");
 
             pilihan = inputAngka("Pilih menu: ");
 
             switch (pilihan) {
-                case 1:
-                    tambahDonor();
-                    break;
-
-                case 2:
-                    tampilkanDonor();
-                    break;
-
-                case 3:
-                    updateDonor();
-                    break;
-
-                case 4:
-                    hapusDonor();
-                    break;
-
-                case 0:
-                    break;
-
-                default:
-                    System.out.println("\nPilihan menu tidak tersedia!");
+                case 1 -> tambahDonor();
+                case 2 -> tampilkanDonor();
+                case 3 -> updateDonor();
+                case 4 -> hapusDonor();
+                case 0 -> { }
+                default -> System.out.println(
+                        "Pilihan menu tidak tersedia!"
+                );
             }
-
         } while (pilihan != 0);
     }
 
@@ -461,60 +366,51 @@ public class MenuView {
             }
         }
 
-        String idPendonor = inputTidakKosong("ID Pendonor: ");
-        Pendonor pendonor
-                = pendonorController.cariPendonor(idPendonor);
+        Pendonor pendonor = pendonorController.cariPendonor(
+                inputTidakKosong("ID Pendonor: ")
+        );
 
         if (pendonor == null) {
-            System.out.println(
-                    "Pendonor tidak ditemukan. "
-                    + "Tambahkan data pendonor terlebih dahulu!"
-            );
+            System.out.println("Pendonor tidak ditemukan!");
             return;
         }
 
-        String idPetugas = inputTidakKosong("ID Petugas: ");
-        Petugas petugas
-                = petugasController.cariPetugas(idPetugas);
+        Petugas petugas = petugasController.cariPetugas(
+                inputTidakKosong("ID Petugas: ")
+        );
 
         if (petugas == null) {
-            System.out.println(
-                    "Petugas tidak ditemukan. "
-                    + "Tambahkan data petugas terlebih dahulu!"
-            );
+            System.out.println("Petugas tidak ditemukan!");
             return;
         }
 
-        String tanggal = inputTidakKosong(
-                "Tanggal Donor (DD-MM-YYYY): "
+        String tanggal = inputTanggalDonor();
+        int jumlahDarah = inputAngkaPositif("Jumlah Darah (ml): ");
+
+        donorController.tambahDonor(
+                new Donor(idDonor, pendonor, petugas, tanggal, jumlahDarah)
         );
 
-        int jumlahDarah = inputAngkaPositif(
-                "Jumlah Darah (ml): "
-        );
-
-        Donor donor = new Donor(
-                idDonor,
-                pendonor,
-                petugas,
-                tanggal,
-                jumlahDarah
-        );
-
-        donorController.tambahDonor(donor);
-
-        System.out.println("\nData donor berhasil ditambahkan.");
+        if (donorController.cariDonor(idDonor) != null) {
+            System.out.println("Data donor berhasil ditambahkan.");
+        } else {
+            System.out.println(
+                    "Data donor belum dapat dipastikan tersimpan."
+            );
+        }
     }
 
     private void tampilkanDonor() {
         System.out.println("\n================ DATA DONOR ================");
 
-        if (donorController.getDaftarDonor().isEmpty()) {
+        var daftar = donorController.getDaftarDonor();
+
+        if (daftar.isEmpty()) {
             System.out.println("Belum ada data donor.");
             return;
         }
 
-        for (Donor donor : donorController.getDaftarDonor()) {
+        for (Donor donor : daftar) {
             System.out.println("--------------------------------------------");
             System.out.println(donor);
         }
@@ -525,10 +421,7 @@ public class MenuView {
     private void updateDonor() {
         System.out.println("\n========== UPDATE DATA DONOR ==========");
 
-        String idDonor = inputTidakKosong(
-                "Masukkan ID Donor yang akan diupdate: "
-        );
-
+        String idDonor = inputTidakKosong("ID Donor yang akan diupdate: ");
         Donor donor = donorController.cariDonor(idDonor);
 
         if (donor == null) {
@@ -536,68 +429,49 @@ public class MenuView {
             return;
         }
 
-        System.out.println("\nData saat ini:");
+        System.out.println("Data saat ini:");
         System.out.println(donor);
 
-        String idPendonor = inputTidakKosong(
-                "\nID Pendonor baru: "
+        Pendonor pendonor = pendonorController.cariPendonor(
+                inputTidakKosong("ID Pendonor baru: ")
         );
-
-        Pendonor pendonor
-                = pendonorController.cariPendonor(idPendonor);
 
         if (pendonor == null) {
             System.out.println("Pendonor tidak ditemukan!");
             return;
         }
 
-        String idPetugas = inputTidakKosong(
-                "ID Petugas baru: "
+        Petugas petugas = petugasController.cariPetugas(
+                inputTidakKosong("ID Petugas baru: ")
         );
-
-        Petugas petugas
-                = petugasController.cariPetugas(idPetugas);
 
         if (petugas == null) {
             System.out.println("Petugas tidak ditemukan!");
             return;
         }
 
-        String tanggal = inputTidakKosong(
-                "Tanggal Donor baru (DD-MM-YYYY): "
-        );
+        String tanggal = inputTanggalDonor();
+        int jumlahDarah = inputAngkaPositif("Jumlah Darah baru (ml): ");
 
-        int jumlahDarah = inputAngkaPositif(
-                "Jumlah Darah baru (ml): "
-        );
-
-        boolean berhasil = donorController.updateDonor(
-                idDonor,
-                pendonor,
-                petugas,
-                tanggal,
-                jumlahDarah
-        );
-
-        if (berhasil) {
-            System.out.println("\nData donor berhasil diupdate.");
+        if (donorController.updateDonor(
+                idDonor, pendonor, petugas, tanggal, jumlahDarah)) {
+            System.out.println("Data donor berhasil diupdate.");
+        } else {
+            System.out.println("Data donor gagal diupdate.");
         }
     }
 
     private void hapusDonor() {
         System.out.println("\n========== HAPUS DATA DONOR ==========");
 
-        String idDonor = inputTidakKosong(
-                "Masukkan ID Donor yang akan dihapus: "
-        );
+        String idDonor = inputTidakKosong("ID Donor yang akan dihapus: ");
 
-        boolean berhasil
-                = donorController.hapusDonor(idDonor);
-
-        if (berhasil) {
+        if (donorController.hapusDonor(idDonor)) {
             System.out.println("Data donor berhasil dihapus.");
         } else {
-            System.out.println("Data donor tidak ditemukan!");
+            System.out.println(
+                    "Data donor tidak ditemukan atau gagal dihapus."
+            );
         }
     }
 
@@ -606,20 +480,14 @@ public class MenuView {
     private void tampilkanDataOrang() {
         System.out.println("\n========== DATA ORANG ==========");
 
-        for (Pendonor pendonor
-                : pendonorController.getDaftarPendonor()) {
-
+        for (Pendonor pendonor : pendonorController.getDaftarPendonor()) {
             Orang orang = pendonor;
-
             System.out.println("\n[PENDONOR]");
             System.out.println(orang.getInfo());
         }
 
-        for (Petugas petugas
-                : petugasController.getDaftarPetugas()) {
-
+        for (Petugas petugas : petugasController.getDaftarPetugas()) {
             Orang orang = petugas;
-
             System.out.println("\n[PETUGAS]");
             System.out.println(orang.getInfo());
         }
@@ -630,7 +498,6 @@ public class MenuView {
     private String inputTidakKosong(String pesan) {
         while (true) {
             System.out.print(pesan);
-
             String nilai = input.nextLine().trim();
 
             if (!nilai.isEmpty()) {
@@ -645,10 +512,8 @@ public class MenuView {
         while (true) {
             System.out.print(pesan);
 
-            String nilai = input.nextLine().trim();
-
             try {
-                return Integer.parseInt(nilai);
+                return Integer.parseInt(input.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Input harus berupa angka!");
             }
@@ -675,30 +540,51 @@ public class MenuView {
                 return noHp;
             }
 
-            System.out.println(
-                    "Nomor HP hanya boleh berisi angka!"
-            );
+            System.out.println("Nomor HP hanya boleh berisi angka!");
         }
     }
 
     private String inputGolonganDarah() {
         while (true) {
-            String golonganDarah
-                    = inputTidakKosong(
-                            "Golongan Darah (A/B/AB/O): "
-                    ).toUpperCase();
+            String golonganDarah = inputTidakKosong(
+                    "Golongan Darah (A/B/AB/O): "
+            ).toUpperCase();
 
             if (golonganDarah.equals("A")
                     || golonganDarah.equals("B")
                     || golonganDarah.equals("AB")
                     || golonganDarah.equals("O")) {
-
                 return golonganDarah;
             }
 
             System.out.println(
                     "Golongan darah harus A, B, AB, atau O!"
             );
+        }
+    }
+
+    private String inputTanggalDonor() {
+        java.time.format.DateTimeFormatter formatter =
+                java.time.format.DateTimeFormatter
+                        .ofPattern("uuuu-MM-dd")
+                        .withResolverStyle(
+                                java.time.format.ResolverStyle.STRICT
+                        );
+
+        while (true) {
+            String tanggal = inputTidakKosong(
+                    "Tanggal Donor (YYYY-MM-DD): "
+            );
+
+            try {
+                java.time.LocalDate.parse(tanggal, formatter);
+                return tanggal;
+            } catch (java.time.format.DateTimeParseException e) {
+                System.out.println(
+                        "Format tanggal tidak valid! "
+                        + "Contoh: 2026-10-15"
+                );
+            }
         }
     }
 }
