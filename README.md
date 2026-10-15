@@ -120,7 +120,7 @@ Package `config` berisi konfigurasi koneksi database, konfigurasi Hibernate, dan
 
 ## 1. Menu Utama
 
-**[Masukkan Screenshot 1: Menu Utama Program]**
+<img width="470" height="235" alt="image" src="https://github.com/user-attachments/assets/dcf57fbd-b9f0-4102-aa48-74474eabfa66" />
 
 **Gambar 1. Menu Utama Program**
 
@@ -132,7 +132,7 @@ Pengguna dapat memilih menu sesuai dengan operasi yang ingin dilakukan.
 
 ## 2. Menampilkan Data Pendonor
 
-**[Masukkan Screenshot 2: Menampilkan Data Pendonor]**
+<img width="460" height="286" alt="AdobeExpressPhotos_1f97a5510df5485a8887a83b889b9383_CopyEdited" src="https://github.com/user-attachments/assets/90088460-8abf-4f84-b993-4613020fbfa5" />
 
 **Gambar 2. Menampilkan Data Pendonor**
 
@@ -144,7 +144,7 @@ Data pendonor terdiri dari ID, nama, nomor HP, dan golongan darah.
 
 ## 3. Menampilkan Data Petugas
 
-**[Masukkan Screenshot 3: Menampilkan Data Petugas]**
+<img width="436" height="253" alt="AdobeExpressPhotos_0737146aa1fe4549b1a8560915dd685e_CopyEdited" src="https://github.com/user-attachments/assets/68e13912-e128-4ed4-9921-e945d45fa0c0" />
 
 **Gambar 3. Menampilkan Data Petugas**
 
@@ -156,7 +156,7 @@ Data petugas terdiri dari ID, nama, nomor HP, dan jabatan.
 
 ## 4. Menampilkan Data Donor
 
-**[Masukkan Screenshot 4: Menampilkan Data Donor]**
+<img width="412" height="288" alt="AdobeExpressPhotos_fa0721708db74f5e9bf65f06f4ee18bc_CopyEdited" src="https://github.com/user-attachments/assets/910320ca-5f94-4155-808b-15a9caf5ab21" />
 
 **Gambar 4. Menampilkan Data Donor**
 
@@ -170,7 +170,7 @@ Data pendonor dan petugas dihubungkan melalui relasi foreign key pada database.
 
 ## 5. Menambahkan Data
 
-**[Masukkan Screenshot 5: Menambahkan Data]**
+<img width="342" height="137" alt="AdobeExpressPhotos_44aaabedf129428ab39d154077d6075b_CopyEdited" src="https://github.com/user-attachments/assets/81007b81-eb74-4939-a46a-e8bf455b7df4" />
 
 **Gambar 5. Menambahkan Data**
 
@@ -182,7 +182,7 @@ Data yang dimasukkan akan diproses oleh controller dan DAO, kemudian disimpan ke
 
 ## 6. Mengubah Data
 
-**[Masukkan Screenshot 6: Mengubah Data]**
+<img width="363" height="250" alt="AdobeExpressPhotos_fb4788b4d22545a1902acf3aba7cd20a_CopyEdited" src="https://github.com/user-attachments/assets/8761bec8-e71e-4811-b832-b2003c0baf9b" />
 
 **Gambar 6. Mengubah Data**
 
@@ -194,7 +194,7 @@ Perubahan dilakukan melalui controller dan DAO, kemudian diterapkan pada databas
 
 ## 7. Menghapus Data
 
-**[Masukkan Screenshot 7: Menghapus Data]**
+<img width="352" height="66" alt="AdobeExpressPhotos_fb74e9b9d63446c59fbbaeeec785fd53_CopyEdited" src="https://github.com/user-attachments/assets/24b95352-3cb2-4c04-80fd-499c54c375cc" />
 
 **Gambar 7. Menghapus Data**
 
